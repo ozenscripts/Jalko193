@@ -1,0 +1,70 @@
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local enabled = false
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "InfiniteJumpGUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.fromOffset(150, 75)
+frame.Position = UDim2.new(0.5, -75, 0.5, -37)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = frame
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 25)
+title.BackgroundTransparency = 1
+title.Text = "Infinite Jump"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 14
+title.Font = Enum.Font.GothamBold
+title.Parent = frame
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, -20, 0, 32)
+button.Position = UDim2.fromOffset(10, 32)
+button.BackgroundColor3 = Color3.fromRGB(170, 50, 50)
+button.Text = "OFF"
+button.TextColor3 = Color3.new(1, 1, 1)
+button.TextSize = 14
+button.Font = Enum.Font.GothamBold
+button.Parent = frame
+
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 6)
+buttonCorner.Parent = button
+
+button.MouseButton1Click:Connect(function()
+    enabled = not enabled
+
+    if enabled then
+        button.Text = "ON"
+        button.BackgroundColor3 = Color3.fromRGB(50, 170, 80)
+    else
+        button.Text = "OFF"
+        button.BackgroundColor3 = Color3.fromRGB(170, 50, 50)
+    end
+end)
+
+UserInputService.JumpRequest:Connect(function()
+    if enabled then
+        local character = player.Character
+        local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+        if humanoid then
+            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
